@@ -1,0 +1,29 @@
+<hi>Bienvenido {{user.first_name}} ID: {{user._id}}</hi>
+<div>
+
+    <div class="gallery" id="products">
+        <a href="/products/{{product._id}}">
+            <h2>{{product.title}}</h2>
+            <p>{{product.description}}</p>
+            <p>{{product.price}}</p>
+        </a>
+        <button class="add-to-cart" data-product-id="{{product._id}}" data-price="{{product.price}}"
+            data-uid="{{user._id}}">Agregar al carrito</button>
+    </div>
+
+</div>
+
+
+<!-- Mostrar la información de la página actual -->
+<p>Página {{page}} de {{totalPages}}</p>
+
+<!-- Botones para ir a la página anterior y siguiente -->
+{{#if prevPage}}
+<a href="/products/?page={{prevPage}}">Anterior</a>
+{{/if}}
+
+{{#if nextPage}}
+<a href="/products/?page={{nextPage}}">Siguiente</a>
+{{/if}}
+
+<script src="/js/products.js"></script>

@@ -1,0 +1,49 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/{{style}}" />
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="#">Productos</a>
+                    <ul>
+                        <li><a href="/products">Todos los productos</a></li>
+                        <li><a href="/products?category=food">Comida</a></li>
+                        <li><a href="/products?category=presonal-care">Personal Care</a></li>
+                        <li><a href="/products?category=furniture">Muebles</a></li>
+                        <li><a href="/products?status=available">Disponibles</a></li>
+                        <li><a href="/products?status=notavailable">No disponibles</a></li>
+                    </ul>
+                </li>
+                <li><a href="/mockingproducts">Mocking Products</a></li>
+                {{#if user}}
+                {{#if (eq user.role "admin")}}
+                <li><a href="/all-carts">Pedidos</a></li>
+                {{else}}
+                <li><a href="/cart">Carrito</a></li>
+                {{/if}}
+                {{/if}}
+                {{#if user}}
+                <li><a href="/auth/current">Perfil</a></li>
+                <li><a href="/auth/logout">Salir</a></li>
+                {{else}}
+                <li><a href="/auth/login">Login</a></li>
+                {{/if}}
+            </ul>
+        </nav>
+    </header>
+
+    {{{body}}}
+
+</body>
+
+</html>
