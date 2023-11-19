@@ -1,0 +1,135 @@
+paths:
+  /api/products:
+    post:
+      summary: Agrega un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        description: Objeto del producto que se va a agregar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "201":
+          description: Producto agregado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+    get:
+      summary: Obtiene todos los productos
+      tags:
+        - Products
+      parameters:
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+          description: Campo por el cual ordenar los productos
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+          description: Orden ascendente o descendente (asc/desc)
+      responses:
+        "200":
+          description: Productos obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+  /api/products/{pid}:
+    put:
+      summary: Actualiza un producto existente
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto a actualizar
+      requestBody:
+        description: Campos a actualizar en el producto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "200":
+          description: Producto actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Producto no encontrado
+
+    delete:
+      summary: Elimina un producto existente
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto a eliminar
+      responses:
+        "200":
+          description: Producto eliminado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Producto no encontrado
+
+components:
+  schemas:
+    ProductInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nombre del producto
+        price:
+          type: number
+          description: Precio del producto
+        description:
+          type: string
+          description: Descripción del producto
+      example:
+        name: "Producto 1"
+        price: 19.99
+        description: "Descripción del producto 1"
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID autogenerado del producto
+        name:
+          type: string
+          description: Nombre del producto
+        price:
+          type: number
+          description: Precio del producto
+        description:
+          type: string
+          description: Descripción del producto
+      example:
+        _id: "abc123"
+        name: "Producto 1"
+        price: 19.99
+        description: "Descripción del producto 1"

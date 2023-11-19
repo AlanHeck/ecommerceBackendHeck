@@ -1,0 +1,259 @@
+paths:
+  /api/carts:
+    get:
+      summary: Obtiene el carrito del usuario
+      tags:
+        - Carts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Carrito obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+    post:
+      summary: Agrega un producto al carrito
+      tags:
+        - Carts
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Objeto del producto que se va a agregar al carrito
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartProductInput"
+      responses:
+        "201":
+          description: Producto agregado al carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /api/carts/update-products:
+    put:
+      summary: Actualiza el carrito con nuevos productos
+      tags:
+        - Carts
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Lista de productos para actualizar en el carrito
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartUpdateInput"
+      responses:
+        "200":
+          description: Carrito actualizado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /api/carts/update-quantity/{pid}:
+    put:
+      summary: Actualiza la cantidad de un producto en el carrito
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto en el carrito
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Cantidad de productos a actualizar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartQuantityInput"
+      responses:
+        "200":
+          description: Cantidad de productos en el carrito actualizada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /api/carts/delete-product/{pid}:
+    delete:
+      summary: Elimina un producto del carrito
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto en el carrito
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Producto eliminado del carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /api/carts/clear:
+    delete:
+      summary: Elimina todos los productos del carrito
+      tags:
+        - Carts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Todos los productos eliminados del carrito exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+
+  /api/carts/all:
+    get:
+      summary: Obtiene todos los carritos
+      tags:
+        - Carts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Todos los carritos obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cart"
+
+  /api/carts/checkout:
+    post:
+      summary: Realiza el proceso de pago y vacía el carrito
+      tags:
+        - Carts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Proceso de pago completado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutResponse"
+
+components:
+  schemas:
+    CartProductInput:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: ID del producto a agregar al carrito
+        quantity:
+          type: integer
+          description: Cantidad de productos a agregar
+      example:
+        productId: "abc123"
+        quantity: 2
+
+    CartUpdateInput:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID del producto a actualizar en el carrito
+              quantity:
+                type: integer
+                description: Nueva cantidad de productos
+      example:
+        items:
+          - productId: "abc123"
+            quantity: 3
+          - productId: "xyz456"
+            quantity: 1
+
+    CartQuantityInput:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: Nueva cantidad de productos
+      example:
+        quantity: 5
+
+    Cart:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: ID del usuario al que pertenece el carrito
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID del producto en el carrito
+              quantity:
+                type: integer
+                description: Cantidad de productos
+        total:
+          type: number
+          description: Precio total del carrito
+      example:
+        userId: "user123"
+        items:
+          - productId: "abc123"
+            quantity: 2
+          - productId: "xyz456"
+            quantity: 1
+        total: 59.99
+
+    CheckoutResponse:
+      type: object
+      properties:
+        cartId:
+          type: string
+          description: ID del carrito
+        availableProducts:
+          type: array
+          description: Productos disponibles después del pago
+          items:
+            type: string
+        missingProducts:
+          type: array
+          description: Productos no disponibles después del pago
+          items:
+            type: string
+        total:
+          type: number
+          description: Precio total del carrito después del pago
+      example:
+        cartId: "cart123"
+        availableProducts:
+          - "product1"
+          - "product2"
+        missingProducts:
+          - "product3"
+          - "product4"
+        total: 39.99
