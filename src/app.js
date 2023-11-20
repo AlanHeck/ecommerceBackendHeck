@@ -18,7 +18,7 @@ import { errorMiddleware } from './middlewares/errorMiddleware.js';
 import loggerRouter from './routes/logger.routes.js';
 import passResetRouter from './routes/passwordReset.routes.js';
 import swaggerUi from "swagger-ui-express"
-import swaggerOptions from "./swagger.js"
+import specs from "./swagger.js"
 
 // Initialization Express
 const app = express();
@@ -71,7 +71,7 @@ app.use("/auth", sessionsRouter);
 app.use('/mockingproducts', mockingRouter);
 app.use('/loggerTest', loggerRouter);
 app.use('/api/newPass', passResetRouter);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(errorMiddleware);
 
 const httpServer = app.listen(port, () => {
